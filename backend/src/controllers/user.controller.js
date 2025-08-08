@@ -61,20 +61,24 @@ export const currentUser = asyncHandler(async (req, res) => {
   res.status(200).json({ user });
 });
 
-// Follow user
+// Follow or Unfollow user
 export const followUser = asyncHandler(async(req,res)=>{
     const {userId} = getAuth(req);
     const {targetUserId} = req.params;
 
+    // if user and target user same return error
     if(userId==targetUserId) return res.status(400).json({error:"You cannot follow yourself"}); 
     
     const currentUser= await User.findOne({clerkId:userId});
     const targetUser= await User.findOne({clerkId:targetUserId});
 
+    // if user or target user cannot find return error
     if(!targetUser || !currentUser) return res.status(404).json({error:"User not found"});
 
     const isFollowing = currentUser.following.includes(targetUser);
     
+    // if current user already following target user,unfollow them
+    // If targetUser is not being followed, follow them. (create notification from current user to targetUser)
     if(isFollowing){
         await User.findByIdAndUpdate(currentUser._id,{
             $pull:{following:targetUserId}
