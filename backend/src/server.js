@@ -7,6 +7,7 @@ import { ENV } from "./config/env.js";
 import { connectDB } from "./config/db.js";
 
 import userRoutes from './routers/user.route.js'
+import postsRoutes from './routers/post.route.js'
 
 const app = express();
 
@@ -17,6 +18,12 @@ app.use(clerkMiddleware());
 
 
 app.use("api/users",userRoutes)
+app.use("api/posts",postsRoutes)
+
+app.use((err,req,res)=>{
+  console.error("Unhandled error",err);
+  res.status(500).json({error:err.message || "INTERNAL SERVER ERROR"})
+});
 
 const startServer = async () => {
   try {
