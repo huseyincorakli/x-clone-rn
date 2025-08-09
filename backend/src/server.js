@@ -8,6 +8,7 @@ import { connectDB } from "./config/db.js";
 
 import userRoutes from './routers/user.route.js'
 import postsRoutes from './routers/post.route.js'
+import commentRoutes from './routers/comment.route.js'
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(clerkMiddleware());
 
 app.use("api/users",userRoutes)
 app.use("api/posts",postsRoutes)
+app.use("api/comment",commentRoutes)
 
 app.use((err,req,res,next)=>{
   console.error("Unhandled error",err);
