@@ -8,11 +8,12 @@ import {
 } from "react-native";
 
 export default function Index() {
-  const {handleSocialAuth,isLoading} = useSocialAuth();
+  const { handleSocialAuth, isLoading } = useSocialAuth();
+
   return (
-    <View className="flex-1  bg-white">
+    <View className="flex-1 bg-white">
       <View className="flex-1 px-8 justify-between">
-        <View className="flex-1 justify-center ">
+        <View className="flex-1 justify-center">
           {/** Image */}
           <View className="items-center">
             <Image
@@ -26,7 +27,7 @@ export default function Index() {
             {/* Google Button */}
             <TouchableOpacity
               className="flex-row items-center justify-center bg-white border border-gray-300 rounded-full min-h-[50px]"
-              onPress={() => {handleSocialAuth("oauth_google")}}
+              onPress={() => handleSocialAuth("oauth_google")}
               disabled={isLoading}
               style={{
                 shadowColor: "#000",
@@ -52,11 +53,10 @@ export default function Index() {
                 </View>
               )}
             </TouchableOpacity>
-
-            {/* Google Button */}
+            {/* Apple Button */}
             <TouchableOpacity
               className="flex-row items-center justify-center bg-white border border-gray-300 rounded-full min-h-[50px]"
-              onPress={() => {handleSocialAuth("oauth_apple")}}
+              onPress={() => handleSocialAuth("oauth_apple")}
               disabled={isLoading}
               style={{
                 shadowColor: "#000",
@@ -85,7 +85,8 @@ export default function Index() {
           </View>
           {/*Terms and Privacy */}
           <Text className="text-center text-gray-500 text-sm leading-4 mt-6 px-2">
-            By signing up, you agree to our <Text className="text-blue-500">Terms</Text>
+            By signing up, you agree to our{" "}
+            <Text className="text-blue-500">Terms</Text>
             {", "}
             <Text className="text-blue-500">Privacy Policy</Text>
             {", "}
