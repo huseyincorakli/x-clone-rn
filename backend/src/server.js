@@ -25,6 +25,10 @@ app.use("api/posts",postsRoutes)
 app.use("api/comment",commentRoutes)
 app.use("api/notification",notificationRoutes)
 
+app.get("/health",(req,res)=>{
+  return res.status(200).json({message:"Running"})
+})
+
 app.use((err,req,res,next)=>{
   console.error("Unhandled error",err);
   res.status(500).json({error:err.message || "INTERNAL SERVER ERROR"})
