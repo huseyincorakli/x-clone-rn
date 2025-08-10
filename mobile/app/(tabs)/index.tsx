@@ -6,7 +6,7 @@ import SignOutButton from '@/components/SignOutButton'
 const HomeScreen = () => {
   return (
     <SafeAreaView className='flex-1'>
-      <Text>index</Text>
+      <Text>index2</Text>
       <SignOutButton/>
     </SafeAreaView>
   )
