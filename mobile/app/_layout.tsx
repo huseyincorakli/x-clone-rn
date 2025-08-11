@@ -9,24 +9,33 @@ function InnerLayout() {
   const segments = useSegments();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!isLoaded) return; // wait until load
-
-    const inAuthGroup = segments[0] === "(auth)";
-
-    if (isSignedIn && inAuthGroup) {
-      // if user logged in but is on the auth page
+useEffect(() => {
+  if (!isLoaded) {
+    return;
+  }
+  
+  if (segments.length < 1) {
+    if (isSignedIn) {
       router.replace("/(tabs)");
-    } else if (!isSignedIn && !inAuthGroup) {
-      // if user not logged in but is on the tabs page
+    } else {
       router.replace("/(auth)");
     }
-  }, [isSignedIn, isLoaded, segments]);
+    return;
+  }
+  
+  const inAuthGroup = segments[0] === "(auth)";
+  
+  if (isSignedIn && inAuthGroup) {
+    router.replace("/(tabs)");
+  } else if (!isSignedIn && !inAuthGroup) {
+    router.replace("/(auth)");
+  }
+}, [isSignedIn, isLoaded, segments]);
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(auth)"/>
-      <Stack.Screen name="(tabs)"/>
+      <Stack.Screen name="(auth)" />
+      <Stack.Screen name="(tabs)" />
     </Stack>
   );
 }
