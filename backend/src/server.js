@@ -20,10 +20,11 @@ app.use(express.json());
 app.use(clerkMiddleware());
 app.use(arcjetMiddleWare)
 
-app.use("api/users",userRoutes)
-app.use("api/posts",postsRoutes)
-app.use("api/comment",commentRoutes)
-app.use("api/notification",notificationRoutes)
+app.use("/api/users", userRoutes)
+app.use("/api/posts", postsRoutes)
+app.use("/api/comment", commentRoutes)
+app.use("/api/notification", notificationRoutes)
+
 
 app.get("/health",(req,res)=>{
   return res.status(200).json({message:"Running"})

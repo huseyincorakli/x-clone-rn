@@ -3,6 +3,7 @@ import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import "../global.css";
+import {QueryClient,QueryClientProvider} from "@tanstack/react-query"
 
 function InnerLayout() {
   const { isSignedIn, isLoaded } = useAuth();
@@ -40,10 +41,14 @@ useEffect(() => {
   );
 }
 
+const queryClient = new QueryClient()
+
 export default function RootLayout() {
   return (
     <ClerkProvider tokenCache={tokenCache}>
-      <InnerLayout />
+      <QueryClientProvider client={queryClient}>
+        <InnerLayout />
+      </QueryClientProvider>
     </ClerkProvider>
   );
 }
