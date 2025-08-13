@@ -9,8 +9,8 @@ export const useUserSync=()=>{
 
     const syncUserMutation = useMutation({
         mutationFn:()=>userApi.syncUser(api),
-        onSuccess:(response:any)=>console.log("user synced successflyy",response.data.user),
-        onError:(error)=>console.log("user sync failed",JSON.stringify(error.message))
+        onSuccess:(response:any)=>console.log("USER SYNC -",response.data.message),
+        onError:(error)=>console.log("USER SYNC FAILED",JSON.stringify(error.message))
     })
 
     useEffect(()=>{
