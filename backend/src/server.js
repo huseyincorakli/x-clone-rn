@@ -17,8 +17,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// app.use(clerkMiddleware());
-app.use(arcjetMiddleWare)
+app.use(clerkMiddleware());
+//app.use(arcjetMiddleWare)
 
 app.use("/api/users", userRoutes)
 app.use("/api/posts", postsRoutes)
