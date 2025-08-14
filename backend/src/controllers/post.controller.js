@@ -66,11 +66,6 @@ export const createPost = asyncHandler(async (req, res) => {
   const { userId } = getAuth(req);
   const { content } = req.body;
   const imageFile = req.file;
-
-  console.log("Request",req);
-  console.log('Request body:', content);
-  console.log('Request file:', imageFile);
-  console.log('Content-Type:', req.headers['content-type']);
   
 
   if (!content && !imageFile) {

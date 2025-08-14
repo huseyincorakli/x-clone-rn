@@ -2,110 +2,115 @@ import { useApiClient } from "@/utils/api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Alert } from "react-native";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
 
 export const useCreatePost = () => {
   const [content, setContent] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const api = useApiClient();
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
-  const createPostMutation =useMutation({
-    mutationFn:async(postData:{content:string,imageUri?:string})=>{
-        const formData=new FormData();
+  const createPostMutation = useMutation({
+    mutationFn: async (postData: { content: string; imageUri?: string }) => {
+      const formData = new FormData();
 
-        if(postData.content) formData.append('content',postData.content)
-        
-        if(postData.imageUri) {
-            const uriParts = postData.imageUri.split('.')
-            const fileType = uriParts[uriParts.length-1].toLocaleLowerCase()
+      if (postData.content) formData.append("content", postData.content);
 
-            const mimeTypeMap :Record<string,string>={
-                png:"image/png",
-                gif:"image/gif",
-                webp:"image/webp"
-            };
+      if (postData.imageUri) {
+        const uriParts = postData.imageUri.split(".");
+        const fileType = uriParts[uriParts.length - 1].toLocaleLowerCase();
 
-            const mimeType = mimeTypeMap[fileType || "image/jpeg"]
+        const mimeTypeMap: Record<string, string> = {
+          jpg: "image/jpeg",
+          jpeg: "image/jpeg",
+          png: "image/png",
+          gif: "image/gif",
+          webp: "image/webp",
+        };
 
-            formData.append("image",{
-                uri:postData.imageUri,
-                name:`image.${fileType}`,
-                type:mimeType
-            } as any);
-        }
-        console.log("Form Data: ",formData);
-        
-         return api.post("/posts", formData, {
+        const mimeType = mimeTypeMap[fileType] || "image/jpeg";
+
+        formData.append("image", {
+          uri: postData.imageUri,
+          type: mimeType,
+          name: `image.${fileType}`,
+        } as any);
+      }
+      console.log("Form Data: ", formData.get("image"));
+
+      return api.post("/posts", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
     },
-    onSuccess:()=>{
-        setContent("");
-        setSelectedImage(null);
-        queryClient.invalidateQueries({queryKey:['posts']});
-        Alert.alert("Success","Post created successfully")
+    onSuccess: () => {
+      setContent("");
+      setSelectedImage(null);
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      Alert.alert("Success", "Post created successfully");
     },
-    onError:(error)=>{
-        console.log(JSON.stringify(error));
-        
-        Alert.alert("Failed","Failed to create post")
-    }
+    onError: (error) => {
+      Alert.alert("Failed", "Failed to create post");
+    },
   });
 
-  const handleImagePicker = async(useCamera:boolean=false)=>{
-    const permissionResult = useCamera?await ImagePicker.requestCameraPermissionsAsync(): await ImagePicker.requestMediaLibraryPermissionsAsync();
+  const handleImagePicker = async (useCamera: boolean = false) => {
+    const permissionResult = useCamera
+      ? await ImagePicker.requestCameraPermissionsAsync()
+      : await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if(permissionResult.status!==ImagePicker.PermissionStatus.GRANTED){
-        const source = useCamera ?"camera":"photo library";
-        Alert.alert("Permission needed",`Grant permission to access your ${source}`)
-        return
+    if (permissionResult.status !== ImagePicker.PermissionStatus.GRANTED) {
+      const source = useCamera ? "camera" : "photo library";
+      Alert.alert(
+        "Permission needed",
+        `Grant permission to access your ${source}`
+      );
+      return;
     }
 
-    const pickerOptions:ImagePicker.ImagePickerOptions = {
-        allowsEditing:true,
-        aspect:[16,9],
-        quality:0.8
+    const pickerOptions: ImagePicker.ImagePickerOptions = {
+      allowsEditing: true,
+      aspect: [16, 9],
+      quality: 0.8,
     };
 
+    const result = useCamera
+      ? await ImagePicker.launchCameraAsync(pickerOptions)
+      : await ImagePicker.launchImageLibraryAsync({
+          ...pickerOptions,
+          mediaTypes: ["images"],
+        });
 
-    const result = useCamera? await ImagePicker.launchCameraAsync(pickerOptions):await ImagePicker.launchImageLibraryAsync({
-        ...pickerOptions,mediaTypes:["images"]
-    })
-
-    if(!result.canceled) setSelectedImage(result.assets[0].uri)
+    if (!result.canceled) setSelectedImage(result.assets[0].uri);
   };
 
-  const createPost = ()=>{
-    console.log("called");
-    
-    if(!content.trim() && !selectedImage){
-        Alert.alert("Empty post","Post cannot be empty, add image or write something before posting")
-        return;
+  const createPost = () => {
+
+    if (!content.trim() && !selectedImage) {
+      Alert.alert(
+        "Empty post",
+        "Post cannot be empty, add image or write something before posting"
+      );
+      return;
     }
 
-    const postData:{content:string,imageUri?:string} ={
-        content:content.trim()
-    }
+    const postData: { content: string; imageUri?: string } = {
+      content: content.trim(),
+    };
 
-    if(selectedImage) postData.imageUri = selectedImage
+    if (selectedImage) postData.imageUri = selectedImage;
 
-    createPostMutation.mutate(postData)
-
-  }
-
+    createPostMutation.mutate(postData);
+  };
 
   return {
     content,
     setContent,
     selectedImage,
-    isCreating:createPostMutation.isPending,
-    pickImageFromGallery:()=>handleImagePicker(false),
-    takePhoto:()=>handleImagePicker(true),
-    removeImage:()=>setSelectedImage(null),
-    createPost
-  }
+    isCreating: createPostMutation.isPending,
+    pickImageFromGallery: () => handleImagePicker(false),
+    takePhoto: () => handleImagePicker(true),
+    removeImage: () => setSelectedImage(null),
+    createPost,
+  };
 };
-
-
