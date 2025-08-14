@@ -35,7 +35,8 @@ export const useCreatePost = () => {
                 type:mimeType
             } as any);
         }
-
+        console.log("Form Data: ",formData);
+        
          return api.post("/posts", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
