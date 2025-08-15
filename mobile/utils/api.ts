@@ -39,5 +39,5 @@ export const postApi ={
 }
 
 export const commentApi={
-    createComment:(api:AxiosInstance,postId:string,content:string)=>api.post(`/comments/post/${postId}`,{content})
+    createComment:(api:AxiosInstance,postId:string,content:string)=>api.post(`/comment/post/${postId}`,{content})
 }
