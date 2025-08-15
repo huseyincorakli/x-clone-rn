@@ -28,12 +28,12 @@ export const getPost = asyncHandler(async (req, res) => {
   const { postId } = req.params;
 
   const post = await Post.findById(postId)
-    .populate("user", "username, firstName, lastName,profilePicture")
+    .populate("user", "userName, firstName, lastName,profilePicture")
     .populate({
       path: "comments",
       populate: {
         path: "user",
-        select: "username firstName lastName profilePicture",
+        select: "userName firstName lastName profilePicture",
       },
     });
   if (!post) return res.status(404).json({ error: "Post not found" });
