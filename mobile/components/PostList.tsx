@@ -12,6 +12,7 @@ const PostList = () => {
     isLoading,
     checkIsLiked,
     deletePost,
+    deletePostLoading,
     error,
     refetch,
     toggleLike,
@@ -49,7 +50,6 @@ const PostList = () => {
 
   return (
     <>
-    <Text>{JSON.stringify(posts)}</Text>
     {posts.map((post:Post)=>(
         <PostCard
           key={post._id}
@@ -58,6 +58,7 @@ const PostList = () => {
           onDelete={deletePost}
           currentUser={currentUser}
           isLiked={checkIsLiked(post.likes,currentUser)}
+          deletePostLoading={deletePostLoading}
         />
     ))}
     </>
