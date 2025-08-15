@@ -49,7 +49,6 @@ const PostList = () => {
 
   return (
     <>
-    <Text>{JSON.stringify(posts)}</Text>
     {posts.map((post:Post)=>(
         <PostCard
           key={post._id}

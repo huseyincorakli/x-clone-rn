@@ -14,7 +14,6 @@ export const usePosts = ()=>{
         queryKey:["posts"],
         queryFn:()=>postApi.getPosts(api),
         select:(response)=>{
-            console.log(JSON.stringify(response.data.posts));
             return response.data.posts
             
         }
