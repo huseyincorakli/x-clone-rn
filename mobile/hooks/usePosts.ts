@@ -29,7 +29,7 @@ export const usePosts = ()=>{
         onSuccess:()=>{
             queryClient.invalidateQueries({queryKey:['posts']});
             queryClient.invalidateQueries({queryKey:['userPosts']})
-        }
+        },
     })
 
     const checkIsLiked =(postLikes:string[],currentUser:any):boolean=>{
@@ -44,6 +44,7 @@ export const usePosts = ()=>{
         refetch,
         toggleLike:(postId:string)=>likePostMutation.mutate(postId),
         deletePost:(postId:string)=>deletePost.mutate(postId),
+        deletePostLoading:deletePost.isPending,
         checkIsLiked
     }
 }

@@ -12,6 +12,7 @@ const PostList = () => {
     isLoading,
     checkIsLiked,
     deletePost,
+    deletePostLoading,
     error,
     refetch,
     toggleLike,
@@ -57,6 +58,7 @@ const PostList = () => {
           onDelete={deletePost}
           currentUser={currentUser}
           isLiked={checkIsLiked(post.likes,currentUser)}
+          deletePostLoading={deletePostLoading}
         />
     ))}
     </>
