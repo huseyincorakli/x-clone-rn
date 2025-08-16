@@ -15,7 +15,9 @@ export const useNotification = () => {
   } = useQuery({
     queryKey: ["notifications"],
     queryFn: () => api.get("/notification"),
-    select: (response) => response.data.notifications,
+    select: (response) => {
+      return response.data.notifications
+    },
     
   });
 

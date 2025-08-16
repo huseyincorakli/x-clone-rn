@@ -40,25 +40,20 @@ const NotificationScreen = () => {
     );
   }
 
-  console.log(notifications.data);
-  
-
-
-  
-
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-row items-center justify-between p-4 border-b border-gray-300">
         <Text className="font-bold text-2xl">Notifications</Text>
-        <Feather name="settings" size={24}  color={'gray'}/>
+        <Feather name="settings" size={24} color={"gray"} />
       </View>
 
-        {isLoading ?(<Text>Loading</Text>):notifications.length===0?(<NoNotifications/>):(
-
-          <Text>1</Text>
-        )}
-
-      
+      {isLoading ? (
+        <Text>Loading</Text>
+      ) : notifications.length === 0 ? (
+        <NoNotifications />
+      ) : (
+        <Text>{JSON.stringify(notifications)}</Text>
+      )}
     </SafeAreaView>
   );
 };
