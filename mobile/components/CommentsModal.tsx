@@ -30,6 +30,10 @@ const CommentsModal = ({ onClose, selectedPost }: CommentsModalProps) => {
     setCommentText("");
   };
 
+  const handleSendComment = ()=>{
+
+  }
+
   return (
     <Modal
       visible={!!selectedPost}

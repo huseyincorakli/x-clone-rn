@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, ActivityIndicator, TouchableWithoutFeedback,TouchableOpacity, Alert } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { usePosts } from "@/hooks/usePosts";
@@ -8,8 +8,7 @@ import CommentsModal from "./CommentsModal";
 
 const PostList = () => {
   const { currentUser } = useCurrentUser();
-  const [selectedPost,setSelectedPost]=useState<Post>()
-  
+  const [selectedPostId, setSelectedPostId] = useState<string>();
   const {
     posts,
     isLoading,
@@ -20,6 +19,10 @@ const PostList = () => {
     refetch,
     toggleLike,
   } = usePosts();
+
+  const selectedPost = selectedPostId 
+    ? posts.find((post:Post) => post._id === selectedPostId) 
+    : undefined;
 
   if (isLoading) {
     return (
@@ -35,8 +38,8 @@ const PostList = () => {
       <View className="items-center p-4 gap-3">
         <Text className="text-gray-500">Failed to load posts</Text>
         <TouchableOpacity
-          onPress={() => refetch}
-          className="bg-blue-500 px-3  py-1 rounded-xl "
+          onPress={() => refetch()}
+          className="bg-blue-500 px-3 py-1 rounded-xl "
         >
           <Text className="text-white font-semibold">Retry</Text>
         </TouchableOpacity>
@@ -44,29 +47,38 @@ const PostList = () => {
     );
   }
 
-  if(posts.length===0){
-    return(
-        <View className="items-center p-4">
-            <Text className="text-gray-500 font-semibold">No posts yet</Text>
-        </View>
-    )
+  if (posts.length === 0) {
+    return (
+      <View className="items-center p-4">
+        <Text className="text-gray-500 font-semibold">No posts yet</Text>
+      </View>
+    );
   }
 
   return (
     <>
-    {posts.map((post:Post)=>(
-        <PostCard
+      {posts.map((post: Post) => (
+        <TouchableWithoutFeedback key={post._id+post.user._id} onPress={()=>{setSelectedPostId(post._id)}}>
+          <View>
+            <PostCard
           key={post._id}
           post={post}
           onLike={toggleLike}
           onDelete={deletePost}
           currentUser={currentUser}
-          onComment={(post:Post)=>{setSelectedPost(post)}}
-          isLiked={checkIsLiked(post.likes,currentUser)}
+          onComment={(post: Post) => { setSelectedPostId(post._id) }}
+          isLiked={checkIsLiked(post.likes, currentUser)}
           deletePostLoading={deletePostLoading}
         />
-    ))}
-    {selectedPost && (<CommentsModal selectedPost={selectedPost} onClose={()=>setSelectedPost(undefined)}/>)}
+          </View>
+        </TouchableWithoutFeedback>
+      ))}
+      {selectedPost && (
+        <CommentsModal 
+          selectedPost={selectedPost} 
+          onClose={() => setSelectedPostId(undefined)} 
+        />
+      )}
     </>
   );
 };
