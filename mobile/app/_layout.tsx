@@ -4,6 +4,7 @@ import { Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import "../global.css";
 import {QueryClient,QueryClientProvider} from "@tanstack/react-query"
+import { StatusBar } from "expo-status-bar";
 
 function InnerLayout() {
   const { isSignedIn, isLoaded } = useAuth();
@@ -48,6 +49,7 @@ export default function RootLayout() {
     <ClerkProvider tokenCache={tokenCache}>
       <QueryClientProvider client={queryClient}>
         <InnerLayout />
+        <StatusBar  style="dark"/>
       </QueryClientProvider>
     </ClerkProvider>
   );

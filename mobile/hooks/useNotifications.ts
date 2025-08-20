@@ -1,47 +1,38 @@
-import { useApiClient } from "@/utils/api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Alert } from "react-native";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useApiClient } from "../utils/api";
 
-export const useNotification = () => {
+export const useNotifications = () => {
   const api = useApiClient();
   const queryClient = useQueryClient();
 
   const {
     data: notificationsData,
-    error,
     isLoading,
+    error,
     refetch,
     isRefetching,
   } = useQuery({
     queryKey: ["notifications"],
     queryFn: () => api.get("/notification"),
-    select: (response) => response.data.notifications,
-    
+    select: (res) => res.data.notifications,
   });
 
   const deleteNotificationMutation = useMutation({
-    mutationFn:(notificationId:string)=>api.delete(`/notification/${notificationId}`),
-    onSuccess:()=>{
-        queryClient.invalidateQueries({queryKey:['notifications']})
-    },
-    onError:(error)=>{
-        console.log(error);
-        
-        Alert.alert('Error','Failed to delete notification')
-    }
-  })
+    mutationFn: (notificationId: string) => api.delete(`/notification/${notificationId}`),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["notifications"] }),
+  });
 
-  const deleteNotification =(notificationId:string)=>{
+  const deleteNotification = (notificationId: string) => {
     deleteNotificationMutation.mutate(notificationId);
-  }
+  };
 
   return {
-   notifications:notificationsData || [],
-   isLoading,
-   error,
-   refetch,
-   isRefetching,
-   deleteNotification,
-   isDeletingNotification : deleteNotificationMutation.isPending
-  }
+    notifications: notificationsData || [],
+    isLoading,
+    error,
+    refetch,
+    isRefetching,
+    deleteNotification,
+    isDeletingNotification: deleteNotificationMutation.isPending,
+  };
 };
